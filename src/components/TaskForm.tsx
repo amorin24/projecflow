@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createTask, updateTask, getTask } from '../lib/api';
 import { Task, TaskResponse, CreateTaskRequest, UpdateTaskRequest } from '../lib/types';
-// Remove unused import
+import { getErrorMessage } from '../utils/errorUtils';
 // No need for uuid import as we're using string IDs in the frontend
 import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
@@ -84,7 +84,7 @@ export default function TaskForm({ projectId, task, onSuccess, isDialog = false,
             status_id: taskData.status.id || 1,
           });
         } catch (err) {
-          console.error('Error fetching task data:', err);
+          // Use standardized error handling
           setError('Failed to load task data');
         }
       } else if (isEditMode && task) {
@@ -170,21 +170,17 @@ export default function TaskForm({ projectId, task, onSuccess, isDialog = false,
       }
       
       // Format the data for submission
-      const submissionData = {
+      const submissionData: CreateTaskRequest = {
         title: formData.title,
         description: formData.description,
         project_id: formData.project_id || projectId,
         assignee_id: formData.assignee_id || user?.id,
-        due_date: formData.due_date || null,
-        priority: formData.priority,
+        due_date: formData.due_date || undefined,
+        priority: formData.priority as 'low' | 'medium' | 'high',
         status_id: Number(formData.status_id)
       };
       
-      // Log the data for debugging
-      console.log('Project ID:', projectId);
-      console.log('Form data project_id:', formData.project_id);
-      
-      console.log('Submitting task data:', submissionData);
+      // Submit the data without logging
       
       if (isEditMode) {
         // Use the ID from either the task prop or the URL parameter
@@ -224,12 +220,9 @@ export default function TaskForm({ projectId, task, onSuccess, isDialog = false,
       if (onClose) {
         onClose();
       }
-    } catch (err: any) {
-      console.error('Error saving task', err);
-      // Provide more detailed error message if available
-      const errorMessage = err.response?.data?.message || 
-                          err.response?.data?.error || 
-                          'Failed to save task. Please check all fields and try again.';
+    } catch (err: unknown) {
+      // Use our standardized error handling utility
+      const errorMessage = getErrorMessage(err);
       setError(errorMessage);
       setIsLoading(false);
     }

@@ -1,5 +1,15 @@
 import axios from 'axios';
-import { Task } from './types';
+import { 
+  Task, 
+  User, 
+  RegisterRequest, 
+  CreateProjectRequest, 
+  UpdateProjectRequest, 
+  ProjectResponse, 
+  AddMemberRequest,
+  CreateTaskRequest,
+  UpdateTaskRequest
+} from './types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
@@ -26,8 +36,8 @@ api.interceptors.request.use(
 export const login = (email: string, password: string) => 
   api.post('/auth/login', { email, password });
 
-export const register = (userData: any) => 
-  api.post('/auth/register', userData);
+export const register = (userData: RegisterRequest) => 
+  api.post<{ user: User; token: string }>('/auth/register', userData);
 
 export const getCurrentUser = () => 
   api.get('/auth/me');
@@ -39,17 +49,17 @@ export const getProjects = () =>
 export const getProject = (id: string) => 
   api.get(`/projects/${id}`);
 
-export const createProject = (projectData: any) => 
-  api.post('/projects', projectData);
+export const createProject = (projectData: CreateProjectRequest) => 
+  api.post<{ project: ProjectResponse }>('/projects', projectData);
 
-export const updateProject = (id: string, projectData: any) => 
-  api.put(`/projects/${id}`, projectData);
+export const updateProject = (id: string, projectData: UpdateProjectRequest) => 
+  api.put<{ project: ProjectResponse }>(`/projects/${id}`, projectData);
 
 export const deleteProject = (id: string) => 
   api.delete(`/projects/${id}`);
 
-export const addProjectMember = (projectId: string, userData: any) => 
-  api.post(`/projects/${projectId}/members`, userData);
+export const addProjectMember = (projectId: string, userData: AddMemberRequest) => 
+  api.post<{ success: boolean }>(`/projects/${projectId}/members`, userData);
 
 export const removeProjectMember = (projectId: string, userId: string) => 
   api.delete(`/projects/${projectId}/members/${userId}`);
@@ -61,11 +71,11 @@ export const getTasks = (projectId: string) =>
 export const getTask = (id: string) => 
   api.get<{ task: Task }>(`/tasks/${id}`);
 
-export const createTask = (taskData: any) => 
-  api.post('/tasks', taskData);
+export const createTask = (taskData: CreateTaskRequest) => 
+  api.post<{ task: Task }>('/tasks', taskData);
 
-export const updateTask = (id: string, taskData: any) => 
-  api.put(`/tasks/${id}`, taskData);
+export const updateTask = (id: string, taskData: UpdateTaskRequest) => 
+  api.put<{ task: Task }>(`/tasks/${id}`, taskData);
 
 export const updateTaskStatus = (id: string, statusId: number) => 
   api.patch(`/tasks/${id}/status`, { status_id: statusId });

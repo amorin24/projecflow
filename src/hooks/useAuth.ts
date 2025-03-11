@@ -1,14 +1,7 @@
 import { useState, useEffect } from 'react';
 import { login, register, getCurrentUser } from '../lib/api';
-
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  full_name: string;
-  role: string;
-  created_at: string;
-}
+import { User, RegisterRequest } from '../lib/types';
+import { getErrorMessage } from '../utils/errorUtils';
 
 interface AuthState {
   user: User | null;
@@ -73,17 +66,18 @@ export const useAuth = () => {
         error: null,
       });
       return true;
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorMessage = getErrorMessage(err);
       setAuthState({
         ...authState,
         isLoading: false,
-        error: err.response?.data?.error || 'Login failed',
+        error: errorMessage,
       });
       return false;
     }
   };
 
-  const registerUser = async (userData: any) => {
+  const registerUser = async (userData: RegisterRequest) => {
     setAuthState({ ...authState, isLoading: true, error: null });
     try {
       const res = await register(userData);
@@ -96,11 +90,12 @@ export const useAuth = () => {
         error: null,
       });
       return true;
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorMessage = getErrorMessage(err);
       setAuthState({
         ...authState,
         isLoading: false,
-        error: err.response?.data?.error || 'Registration failed',
+        error: errorMessage,
       });
       return false;
     }

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { createTask } from '../lib/api';
+import { CreateTaskRequest } from '../lib/types';
+import { getErrorMessage } from '../utils/errorUtils';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -55,17 +57,17 @@ export default function TaskFormDialog({ projectId, onSuccess, onClose }: TaskFo
       }
       
       // Format the data for submission
-      const submissionData = {
+      const submissionData: CreateTaskRequest = {
         title: formData.title,
         description: formData.description,
         project_id: formData.project_id,
         assignee_id: formData.assignee_id || user?.id,
-        due_date: formData.due_date || null,
-        priority: formData.priority,
+        due_date: formData.due_date || undefined,
+        priority: formData.priority as 'low' | 'medium' | 'high',
         status_id: Number(formData.status_id)
       };
       
-      console.log('Submitting task data:', submissionData);
+      // Submit the data without logging
       
       await createTask(submissionData);
       setIsLoading(false);
@@ -77,12 +79,9 @@ export default function TaskFormDialog({ projectId, onSuccess, onClose }: TaskFo
       if (onClose) {
         onClose();
       }
-    } catch (err: any) {
-      console.error('Error saving task', err);
-      // Provide more detailed error message if available
-      const errorMessage = err.response?.data?.message || 
-                          err.response?.data?.error || 
-                          'Failed to save task. Please check all fields and try again.';
+    } catch (err: unknown) {
+      // Use standardized error handling
+      const errorMessage = getErrorMessage(err);
       setError(errorMessage);
       setIsLoading(false);
     }
