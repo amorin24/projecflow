@@ -1,4 +1,4 @@
-import React from 'react';
+// Authentication layout component
 import { Link, Outlet } from 'react-router-dom';
 import { Card } from '../components/ui/card';
 import ThemeToggle from '../components/ui/ThemeToggle';
