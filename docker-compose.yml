@@ -21,7 +21,9 @@ services:
 
   # Backend API
   backend:
-    build: .
+    build:
+      context: .
+      dockerfile: ./projectflow/Dockerfile
     container_name: projectflow-backend
     depends_on:
       postgres:
@@ -43,7 +45,7 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: frontend/Dockerfile
+      dockerfile: ./frontend/Dockerfile
     container_name: projectflow-frontend
     depends_on:
       - backend
