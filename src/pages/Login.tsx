@@ -6,6 +6,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Alert, AlertDescription } from '../components/ui/alert';
+import TestCredentialsDisplay from '../components/TestCredentialsDisplay';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -66,13 +67,15 @@ export default function Login() {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-gray-600">
+        <CardFooter className="flex flex-col items-center">
+          <p className="text-sm text-gray-600 mb-4">
             Don't have an account?{' '}
             <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
               Sign up
             </Link>
           </p>
+          {/* Test credentials display */}
+          <TestCredentialsDisplay className="w-full" />
         </CardFooter>
       </Card>
     </div>

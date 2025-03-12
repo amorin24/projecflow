@@ -16,19 +16,24 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
     // Check for saved theme preference or use system preference
-    const savedTheme = localStorage.getItem('theme') as Theme | null;
-    return savedTheme || 
-      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme') as Theme | null;
+      return savedTheme || 
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    }
+    return 'light'; // Default for SSR
   });
 
   useEffect(() => {
     // Update localStorage and apply theme class to document
-    localStorage.setItem('theme', theme);
-    document.documentElement.classList.toggle('dark', theme === 'dark');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', theme);
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    }
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    setTheme((prevTheme: Theme) => prevTheme === 'light' ? 'dark' : 'light');
   };
 
   return (

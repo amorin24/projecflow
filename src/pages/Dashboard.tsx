@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getProjects, getTasks } from '../lib/api';
 import { Project, Task } from '../lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { PlusCircle, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import TestCredentialsDisplay from '../components/TestCredentialsDisplay';
 
 export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -221,6 +222,8 @@ export default function Dashboard() {
           )}
         </CardContent>
       </Card>
+      {/* Test credentials display */}
+      <TestCredentialsDisplay className="mt-6" />
     </div>
   );
 }
