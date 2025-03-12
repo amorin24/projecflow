@@ -1,13 +1,31 @@
-# ProjectFlow Docker Setup
+# ProjectFlow
 
-This repository contains Docker configuration for running the ProjectFlow application.
+ProjectFlow is a comprehensive project management application designed to help teams organize, track, and collaborate on projects efficiently.
 
-## Prerequisites
+## Features
+
+- User authentication and authorization
+- Project creation and management
+- Task assignment and tracking
+- Team collaboration tools
+- Resource allocation and scheduling
+- Dark/Light theme support
+
+## Technology Stack
+
+- **Backend**: Go (Golang)
+- **Frontend**: React with TypeScript
+- **Database**: PostgreSQL
+- **Containerization**: Docker
+
+## Getting Started with Docker
+
+### Prerequisites
 
 - Docker
 - Docker Compose
 
-## Getting Started
+### Installation and Setup
 
 1. Clone the repository:
    ```
@@ -15,7 +33,7 @@ This repository contains Docker configuration for running the ProjectFlow applic
    cd projecflow
    ```
 
-2. Start the application:
+2. Start the application using Docker Compose:
    ```
    docker-compose up -d
    ```
@@ -24,15 +42,11 @@ This repository contains Docker configuration for running the ProjectFlow applic
    - Frontend: http://localhost
    - Backend API: http://localhost:8080
 
-## Services
+### Environment Variables
 
-- **Frontend**: React application running on Nginx
-- **Backend**: Go API server
-- **Database**: PostgreSQL
+The application uses the following environment variables:
 
-## Environment Variables
-
-### Backend
+#### Backend
 - `DB_HOST`: PostgreSQL host
 - `DB_PORT`: PostgreSQL port
 - `DB_USER`: PostgreSQL user
@@ -42,9 +56,65 @@ This repository contains Docker configuration for running the ProjectFlow applic
 - `JWT_SECRET`: Secret key for JWT tokens
 - `ENV`: Environment (development/production)
 
-### Frontend
+#### Frontend
 - `VITE_API_URL`: Backend API URL
 
-## Volumes
+## Development
 
-- `postgres_data`: Persistent storage for PostgreSQL data
+### Running Locally (Without Docker)
+
+#### Backend
+1. Navigate to the backend directory:
+   ```
+   cd projectflow
+   ```
+
+2. Install dependencies:
+   ```
+   go mod download
+   ```
+
+3. Run the application:
+   ```
+   go run main.go
+   ```
+
+#### Frontend
+1. Navigate to the frontend directory:
+   ```
+   cd projectflow-frontend/projectflow
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Start the development server:
+   ```
+   npm run dev
+   ```
+
+## Testing
+
+The application includes comprehensive test suites:
+
+- Unit tests
+- Integration tests
+- End-to-end tests
+
+To run tests:
+
+```
+# Backend tests
+cd projectflow
+go test ./...
+
+# Frontend tests
+cd projectflow-frontend/projectflow
+npm test
+```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
