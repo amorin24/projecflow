@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 
 const ThemeToggle = () => {
@@ -7,7 +6,7 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-md transition-colors hover:bg-muted border border-border bg-background shadow-sm"
+      className="p-2 rounded-md transition-all duration-300 hover:bg-accent border border-border bg-background shadow-sm hover:scale-105"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
       title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
       data-testid="theme-toggle"

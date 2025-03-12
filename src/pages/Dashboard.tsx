@@ -97,7 +97,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <Link to="/projects/new">
@@ -110,38 +110,38 @@ export default function Dashboard() {
 
       {/* Task Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+        <Card className="transition-all hover:translate-y-[-2px]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Total Tasks</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Tasks</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{totalTasks}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="transition-all hover:translate-y-[-2px]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Completed</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Completed</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center">
             <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
             <div className="text-3xl font-bold">{completedTasks}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="transition-all hover:translate-y-[-2px]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">In Progress</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">In Progress</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center">
-            <Clock className="h-5 w-5 text-blue-500 mr-2" />
+            <Clock className="h-5 w-5 text-primary mr-2" />
             <div className="text-3xl font-bold">{inProgressTasks}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="transition-all hover:translate-y-[-2px]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">To Do</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">To Do</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center">
-            <AlertCircle className="h-5 w-5 text-yellow-500 mr-2" />
+            <AlertCircle className="h-5 w-5 text-amber-500 mr-2" />
             <div className="text-3xl font-bold">{todoTasks}</div>
           </CardContent>
         </Card>
@@ -150,13 +150,13 @@ export default function Dashboard() {
       {/* Recent Projects */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Projects</CardTitle>
+          <CardTitle className="text-xl">Recent Projects</CardTitle>
           <CardDescription>Your most recent projects</CardDescription>
         </CardHeader>
         <CardContent>
           {projects.length === 0 ? (
-            <div className="text-center py-4">
-              <p className="text-gray-500">No projects yet</p>
+            <div className="text-center py-6">
+              <p className="text-muted-foreground mb-3">No projects yet</p>
               <Link to="/projects/new">
                 <Button variant="outline" className="mt-2">
                   Create your first project
@@ -165,11 +165,15 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="space-y-4">
-              {projects.slice(0, 5).map((project) => (
-                <div key={project.id} className="flex justify-between items-center p-4 border rounded-md">
+              {projects.slice(0, 5).map((project, index) => (
+                <div 
+                  key={project.id} 
+                  className="flex justify-between items-center p-4 border rounded-lg transition-all hover:border-primary/30 hover:bg-accent/50 animate-slide-in-up"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
                   <div>
                     <h3 className="font-medium">{project.name}</h3>
-                    <p className="text-sm text-gray-500">{project.description}</p>
+                    <p className="text-sm text-muted-foreground">{project.description}</p>
                   </div>
                   <Link to={`/projects/${project.id}`}>
                     <Button variant="outline" size="sm">
@@ -179,7 +183,7 @@ export default function Dashboard() {
                 </div>
               ))}
               {projects.length > 5 && (
-                <div className="text-center">
+                <div className="text-center pt-2">
                   <Link to="/projects">
                     <Button variant="link">View all projects</Button>
                   </Link>
@@ -193,21 +197,25 @@ export default function Dashboard() {
       {/* Tasks Due Soon */}
       <Card>
         <CardHeader>
-          <CardTitle>Tasks Due Soon</CardTitle>
+          <CardTitle className="text-xl">Tasks Due Soon</CardTitle>
           <CardDescription>Tasks due in the next 7 days</CardDescription>
         </CardHeader>
         <CardContent>
           {tasksDueSoon.length === 0 ? (
-            <div className="text-center py-4">
-              <p className="text-gray-500">No tasks due soon</p>
+            <div className="text-center py-6">
+              <p className="text-muted-foreground">No tasks due soon</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {tasksDueSoon.map((task) => (
-                <div key={task.id} className="flex justify-between items-center p-4 border rounded-md">
+              {tasksDueSoon.map((task, index) => (
+                <div 
+                  key={task.id} 
+                  className="flex justify-between items-center p-4 border rounded-lg transition-all hover:border-primary/30 hover:bg-accent/50 animate-slide-in-up"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
                   <div>
                     <h3 className="font-medium">{task.title}</h3>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       Due: {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No due date'}
                     </p>
                   </div>
