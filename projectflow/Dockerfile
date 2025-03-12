@@ -2,7 +2,7 @@ FROM golang:1.21-alpine
 
 WORKDIR /app
 
-COPY projectflow/main.go .
+COPY projectflow/ .
 
 RUN go build -o projectflow-server .
 
