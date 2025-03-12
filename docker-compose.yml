@@ -19,38 +19,12 @@ services:
       timeout: 5s
       retries: 5
 
-  # Backend API
-  backend:
-    build:
-      context: .
-      dockerfile: ./projectflow/Dockerfile
-    container_name: projectflow-backend
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: projectflow
-      SERVER_PORT: 8080
-      JWT_SECRET: your_jwt_secret_key
-      ENV: production
-    ports:
-      - "8080:8080"
-    restart: unless-stopped
-
   # Frontend Application
   frontend:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
     container_name: projectflow-frontend
-    depends_on:
-      - backend
-    environment:
-      VITE_API_URL: http://localhost:8080/api
     ports:
       - "80:80"
     restart: unless-stopped
