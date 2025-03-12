@@ -1,120 +1,112 @@
-# ProjectFlow
+# ProjectFlow - Docker Setup
 
-ProjectFlow is a comprehensive project management application designed to help teams organize, track, and collaborate on projects efficiently.
+## Overview
 
-## Features
+ProjectFlow is a comprehensive project management application designed to help teams organize, track, and collaborate on projects efficiently. This repository contains the Docker configuration for running the complete application stack.
 
-- User authentication and authorization
-- Project creation and management
-- Task assignment and tracking
-- Team collaboration tools
-- Resource allocation and scheduling
-- Dark/Light theme support
-
-## Technology Stack
-
-- **Backend**: Go (Golang)
-- **Frontend**: React with TypeScript
-- **Database**: PostgreSQL
-- **Containerization**: Docker
-
-## Getting Started with Docker
-
-### Prerequisites
+## Prerequisites
 
 - Docker
 - Docker Compose
 
-### Installation and Setup
+## Quick Start
 
 1. Clone the repository:
-   ```
+   ```bash
    git clone https://github.com/amorin24/projecflow.git
    cd projecflow
    ```
 
-2. Start the application using Docker Compose:
-   ```
+2. Start the application:
+   ```bash
    docker-compose up -d
    ```
 
 3. Access the application:
    - Frontend: http://localhost
-   - Backend API: http://localhost:8080
+   - Backend API: http://localhost:8080/health
+   - Database: PostgreSQL on port 5432
 
-### Environment Variables
+## Services
 
-The application uses the following environment variables:
+### Frontend
+- React.js application with TypeScript
+- Served via Nginx on port 80
+- Features:
+  - Project management interface
+  - Task tracking and assignment
+  - User authentication
+  - Resource allocation
+  - Light and dark theme support
 
-#### Backend
-- `DB_HOST`: PostgreSQL host
-- `DB_PORT`: PostgreSQL port
-- `DB_USER`: PostgreSQL user
-- `DB_PASSWORD`: PostgreSQL password
-- `DB_NAME`: PostgreSQL database name
-- `SERVER_PORT`: Backend server port
+### Backend
+- Go (Golang) API server
+- RESTful endpoints for application data
+- JWT authentication
+- Running on port 8080
+
+### Database
+- PostgreSQL 15
+- Persistent data storage
+- Running on port 5432
+
+## Environment Variables
+
+### Backend
+- `DB_HOST`: PostgreSQL host (default: postgres)
+- `DB_PORT`: PostgreSQL port (default: 5432)
+- `DB_USER`: PostgreSQL user (default: postgres)
+- `DB_PASSWORD`: PostgreSQL password (default: postgres)
+- `DB_NAME`: PostgreSQL database name (default: projectflow)
+- `SERVER_PORT`: Backend server port (default: 8080)
 - `JWT_SECRET`: Secret key for JWT tokens
 - `ENV`: Environment (development/production)
 
-#### Frontend
-- `VITE_API_URL`: Backend API URL
-
 ## Development
 
-### Running Locally (Without Docker)
+### Building Images
+```bash
+docker-compose build
+```
 
-#### Backend
-1. Navigate to the backend directory:
-   ```
-   cd projectflow
-   ```
+### Running in Development Mode
+```bash
+docker-compose up
+```
 
-2. Install dependencies:
-   ```
-   go mod download
-   ```
+### Viewing Logs
+```bash
+docker-compose logs
+docker-compose logs backend
+docker-compose logs frontend
+docker-compose logs postgres
+```
 
-3. Run the application:
-   ```
-   go run main.go
-   ```
-
-#### Frontend
-1. Navigate to the frontend directory:
-   ```
-   cd projectflow-frontend/projectflow
-   ```
-
-2. Install dependencies:
-   ```
-   npm install
-   ```
-
-3. Start the development server:
-   ```
-   npm run dev
-   ```
+### Stopping the Application
+```bash
+docker-compose down
+```
 
 ## Testing
 
-The application includes comprehensive test suites:
+To test the application:
 
-- Unit tests
-- Integration tests
-- End-to-end tests
+1. Check if the backend is running:
+   ```bash
+   curl http://localhost:8080/health
+   ```
 
-To run tests:
+2. Access the frontend in your browser:
+   ```
+   http://localhost
+   ```
 
-```
-# Backend tests
-cd projectflow
-go test ./...
+## Troubleshooting
 
-# Frontend tests
-cd projectflow-frontend/projectflow
-npm test
-```
+- If containers fail to start, check logs with `docker-compose logs`
+- Ensure ports 80, 8080, and 5432 are not in use by other applications
+- Verify that Docker and Docker Compose are installed correctly
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT
