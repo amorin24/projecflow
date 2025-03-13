@@ -29,7 +29,7 @@ RUN apk --no-cache add ca-certificates tzdata
 # Copy the binary from the build stage
 COPY --from=build /app/projectflow /app/projectflow
 
-# Copy migrations
+# Copy migrations - ensure all migrations including resource management are included
 COPY --from=build /app/database/migrations /app/database/migrations
 
 # Expose the port
@@ -43,7 +43,8 @@ ENV DB_HOST=postgres \
     DB_NAME=projectflow \
     SERVER_PORT=8080 \
     JWT_SECRET=your-secret-key \
-    ENV=development
+    ENV=development \
+    ALLOWED_ORIGINS=http://localhost,http://frontend
 
 # Run the application
 CMD ["/app/projectflow"]
