@@ -4,12 +4,15 @@ import (
 	"database/sql"
 	"net/http"
 	"strconv"
-	"time" // Used for time-related operations throughout the file
+	"time"
 
 	"github.com/amorin24/projecflow/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
+
+// Ensure time package is used
+var _ = time.Now
 
 // ResourceHandler handles resource allocation and availability endpoints
 type ResourceHandler struct {
