@@ -3,8 +3,8 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/projectflow/models"
-	"github.com/projectflow/utils"
+	"github.com/amorin24/projecflow/models"
+	"github.com/amorin24/projecflow/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 

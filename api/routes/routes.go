@@ -3,8 +3,8 @@ package routes
 import (
 	"database/sql"
 	"github.com/gofiber/fiber/v2"
-	"github.com/projectflow/api/handlers"
-	"github.com/projectflow/api/middleware"
+	"github.com/amorin24/projecflow/api/handlers"
+	"github.com/amorin24/projecflow/api/middleware"
 )
 
 // SetupRoutes sets up all the routes for the application

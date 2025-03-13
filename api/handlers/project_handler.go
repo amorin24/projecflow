@@ -5,8 +5,8 @@ import (
 	
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/projectflow/models"
-	"github.com/projectflow/utils/cache"
+	"github.com/amorin24/projecflow/models"
+	"github.com/amorin24/projecflow/utils/cache"
 )
 
 // Initialize cache for projects

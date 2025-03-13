@@ -3,7 +3,7 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/projectflow/models"
+	"github.com/amorin24/projecflow/models"
 )
 
 // In-memory storage for development

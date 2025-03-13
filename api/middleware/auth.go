@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/projectflow/utils"
+	"github.com/amorin24/projecflow/utils"
 )
 
 // Protected is a middleware that checks if the user is authenticated

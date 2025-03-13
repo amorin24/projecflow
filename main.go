@@ -9,9 +9,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
-	"github.com/projectflow/api/routes"
-	"github.com/projectflow/config"
-	"github.com/projectflow/database"
+	"github.com/amorin24/projecflow/api/routes"
+	"github.com/amorin24/projecflow/config"
+	"github.com/amorin24/projecflow/database"
 )
 
 func main() {
