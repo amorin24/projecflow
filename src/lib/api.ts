@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { Task, Project, TaskStatus, Notification, CommentResponse } from './types';
+import { 
+  Task, Project, TaskStatus, Notification, CommentResponse,
+  ResourceAllocation, ResourceAllocationResponse, UserAvailability,
+  TimeOffRequest, CreateResourceAllocationRequest, CreateUserAvailabilityRequest,
+  CreateTimeOffRequestRequest
+} from './types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
@@ -115,5 +120,64 @@ export const markNotificationRead = (id: string, read: boolean) =>
 
 export const markAllNotificationsRead = () => 
   api.patch('/notifications', { read: true });
+
+// Resource Allocation API
+export const getResourceAllocations = (filters?: { user_id?: string; project_id?: string }): Promise<{ data: { allocations: ResourceAllocation[] } }> => {
+  let url = '/resources/allocations';
+  if (filters) {
+    const params = new URLSearchParams();
+    if (filters.user_id) params.append('user_id', filters.user_id);
+    if (filters.project_id) params.append('project_id', filters.project_id);
+    if (params.toString()) url += `?${params.toString()}`;
+  }
+  return cachedGet(url);
+};
+
+export const getResourceAllocation = (id: number): Promise<{ data: { allocation: ResourceAllocationResponse } }> => 
+  cachedGet(`/resources/allocations/${id}`);
+
+export const createResourceAllocation = (allocationData: CreateResourceAllocationRequest) => 
+  api.post('/resources/allocations', allocationData);
+
+export const updateResourceAllocation = (id: number, allocationData: Partial<CreateResourceAllocationRequest>) => 
+  api.put(`/resources/allocations/${id}`, allocationData);
+
+export const deleteResourceAllocation = (id: number) => 
+  api.delete(`/resources/allocations/${id}`);
+
+// User Availability API
+export const getUserAvailability = (userId?: string): Promise<{ data: { availability: UserAvailability[] } }> => {
+  let url = '/resources/availability';
+  if (userId) url += `?user_id=${userId}`;
+  return cachedGet(url);
+};
+
+export const createUserAvailability = (availabilityData: CreateUserAvailabilityRequest) => 
+  api.post('/resources/availability', availabilityData);
+
+export const updateUserAvailability = (id: number, availabilityData: Partial<CreateUserAvailabilityRequest>) => 
+  api.put(`/resources/availability/${id}`, availabilityData);
+
+export const deleteUserAvailability = (id: number) => 
+  api.delete(`/resources/availability/${id}`);
+
+// Time Off Request API
+export const getTimeOffRequests = (filters?: { user_id?: string; status?: string }): Promise<{ data: { requests: TimeOffRequest[] } }> => {
+  let url = '/resources/timeoff';
+  if (filters) {
+    const params = new URLSearchParams();
+    if (filters.user_id) params.append('user_id', filters.user_id);
+    if (filters.status) params.append('status', filters.status);
+    if (params.toString()) url += `?${params.toString()}`;
+  }
+  return cachedGet(url);
+};
+
+export const createTimeOffRequest = (requestData: CreateTimeOffRequestRequest) => 
+  api.post('/resources/timeoff', requestData);
+
+export const updateTimeOffRequestStatus = (id: number, status: string) => 
+  api.put(`/resources/timeoff/${id}`, { status });
+
 
 export default api;
