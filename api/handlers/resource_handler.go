@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -11,8 +12,10 @@ import (
 	"github.com/google/uuid"
 )
 
-// Ensure time package is used
-var _ = time.Now
+// FormatTime formats a time value for logging
+func FormatTime(t time.Time) string {
+	return fmt.Sprintf("%s", t.Format(time.RFC3339))
+}
 
 // ResourceHandler handles resource allocation and availability endpoints
 type ResourceHandler struct {
@@ -491,9 +494,13 @@ func (h *ResourceHandler) CreateTimeOffRequest(c *fiber.Ctx) error {
 		})
 	}
 	
+	// Log time information for debugging
+	startFormatted := FormatTime(request.StartDate)
+	endFormatted := FormatTime(request.EndDate)
+	
 	if request.StartDate.After(request.EndDate) {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"error": "Start date must be before end date",
+			"error": fmt.Sprintf("Start date (%s) must be before end date (%s)", startFormatted, endFormatted),
 		})
 	}
 	
