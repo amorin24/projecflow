@@ -1,12 +1,11 @@
 services:
-  # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
     container_name: projectflow-postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: projectflow
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-projectflow}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -17,36 +16,37 @@ services:
       timeout: 5s
       retries: 5
 
-  # Backend API
   backend:
     build:
       context: .
-      dockerfile: ./projectflow/Dockerfile
+      dockerfile: Dockerfile
     container_name: projectflow-backend
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: projectflow
-      SERVER_PORT: 8080
-      JWT_SECRET: your-secret-key
-      ENV: development
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME:-projectflow}
+      SERVER_PORT: ${SERVER_PORT:-8080}
+      JWT_SECRET: ${JWT_SECRET}
+      ENV: ${ENV:-development}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost,http://frontend}
     ports:
       - "8080:8080"
     restart: unless-stopped
 
-  # Frontend Application
   frontend:
     build:
       context: .
-      dockerfile: ./frontend/Dockerfile
+      dockerfile: .docker/frontend.Dockerfile
     container_name: projectflow-frontend
     depends_on:
       - backend
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://backend:8080/api}
     ports:
       - "80:80"
     restart: unless-stopped
