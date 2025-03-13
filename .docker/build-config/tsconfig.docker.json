@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noImplicitAny": false
+  },
+  "include": ["../../src"],
+  "exclude": [
+    "../../node_modules",
+    "../../**/*.test.tsx",
+    "../../**/*.test.ts",
+    "../../**/__tests__/**",
+    "../../**/tests/**"
+  ]
+}

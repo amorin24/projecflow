@@ -1,0 +1,24 @@
+services:
+  # Frontend Application (Standalone)
+  frontend:
+    build:
+      context: ..
+      dockerfile: .docker/frontend.Dockerfile
+      args:
+        - NGINX_CONF=.docker/nginx.test.conf
+    container_name: projectflow-frontend-test
+    environment:
+      # Frontend environment variables with test values
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8080/api}
+      # Test credentials
+      VITE_ADMIN_EMAIL: ${VITE_ADMIN_EMAIL:-admin@example.com}
+      VITE_ADMIN_PASSWORD: ${VITE_ADMIN_PASSWORD:-demo-password}
+      VITE_MANAGER_EMAIL: ${VITE_MANAGER_EMAIL:-manager@example.com}
+      VITE_MANAGER_PASSWORD: ${VITE_MANAGER_PASSWORD:-demo-password}
+      VITE_DEVELOPER_EMAIL: ${VITE_DEVELOPER_EMAIL:-developer@example.com}
+      VITE_DEVELOPER_PASSWORD: ${VITE_DEVELOPER_PASSWORD:-demo-password}
+      VITE_VIEWER_EMAIL: ${VITE_VIEWER_EMAIL:-viewer@example.com}
+      VITE_VIEWER_PASSWORD: ${VITE_VIEWER_PASSWORD:-demo-password}
+    ports:
+      - "80:80"
+    restart: unless-stopped
