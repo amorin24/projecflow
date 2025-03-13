@@ -13,6 +13,9 @@ import TaskFormPage from './pages/TaskForm';
 import Tasks from './pages/Tasks';
 import TaskDetail from './pages/TaskDetail';
 import Profile from './pages/Profile';
+import ResourceManagement from './pages/ResourceManagement';
+import TimeOffRequests from './pages/TimeOffRequests';
+import UserAvailability from './pages/UserAvailability';
 
 // Protected route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -102,6 +105,25 @@ function App() {
           <Route path="profile" element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          } />
+          
+          {/* Resource Management Routes */}
+          <Route path="resources" element={
+            <ProtectedRoute>
+              <ResourceManagement />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="resources/timeoff" element={
+            <ProtectedRoute>
+              <TimeOffRequests />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="resources/availability" element={
+            <ProtectedRoute>
+              <UserAvailability />
             </ProtectedRoute>
           } />
         </Route>
