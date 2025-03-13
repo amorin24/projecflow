@@ -1,13 +1,16 @@
 package routes
 
 import (
+	"database/sql"
 	"github.com/gofiber/fiber/v2"
 	"github.com/projectflow/api/handlers"
 	"github.com/projectflow/api/middleware"
 )
 
 // SetupRoutes sets up all the routes for the application
-func SetupRoutes(app *fiber.App) {
+func SetupRoutes(app *fiber.App, db *sql.DB) {
+	// Initialize handlers
+	resourceHandler := handlers.NewResourceHandler(db)
 	// API group
 	api := app.Group("/api")
 
@@ -51,4 +54,22 @@ func SetupRoutes(app *fiber.App) {
 	notifications.Get("/", handlers.GetUserNotifications)
 	notifications.Patch("/:id", handlers.MarkNotificationRead)
 	notifications.Patch("/", handlers.MarkAllNotificationsRead)
+
+	// Resource management routes
+	resources := api.Group("/resources", middleware.Protected())
+	
+	// Resource allocation routes
+	resources.Get("/allocations", resourceHandler.GetResourceAllocations)
+	resources.Post("/allocations", resourceHandler.CreateResourceAllocation)
+	resources.Put("/allocations/:id", resourceHandler.UpdateResourceAllocation)
+	resources.Delete("/allocations/:id", resourceHandler.DeleteResourceAllocation)
+
+	// User availability routes
+	resources.Get("/availability", resourceHandler.GetUserAvailability)
+	resources.Post("/availability", resourceHandler.SetUserAvailability)
+
+	// Time off request routes
+	resources.Get("/timeoff", resourceHandler.GetTimeOffRequests)
+	resources.Post("/timeoff", resourceHandler.CreateTimeOffRequest)
+	resources.Put("/timeoff/:id", resourceHandler.UpdateTimeOffRequestStatus)
 }
