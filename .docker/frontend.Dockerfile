@@ -4,32 +4,28 @@ FROM node:18-alpine AS build
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY ../package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
-# Copy the rest of the application code
-COPY . .
+# Copy the rest of the application
+COPY .. .
 
-# Copy Docker-specific tsconfig for build
-COPY .docker/build-config/tsconfig.docker.json ./tsconfig.docker.json
-
-# Build the application with Docker-specific config
-RUN NODE_ENV=production npx vite build
+# Build the application
+RUN npm run build
 
 # Production stage
 FROM nginx:alpine
 
-# Copy the build output from the build stage
+# Copy the build output
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy nginx configuration - use ARG to allow overriding during build
-ARG NGINX_CONF=.docker/nginx.conf
-COPY ${NGINX_CONF} /etc/nginx/conf.d/default.conf
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80
 
-# Start Nginx
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,31 +1,28 @@
 services:
-  # PostgreSQL Database
   postgres:
-    image: postgres:15-alpine
     container_name: projectflow-postgres
+    image: postgres:14-alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: projectflow
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
 
-  # Backend API
   backend:
+    container_name: projectflow-backend
     build:
       context: .
-      dockerfile: ./projectflow/Dockerfile
-    container_name: projectflow-backend
-    depends_on:
-      postgres:
-        condition: service_healthy
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
@@ -35,20 +32,10 @@ services:
       SERVER_PORT: 8080
       JWT_SECRET: your-secret-key
       ENV: development
-    ports:
-      - "8080:8080"
-    restart: unless-stopped
-
-  # Frontend Application
-  frontend:
-    build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
-    container_name: projectflow-frontend
+      ALLOWED_ORIGINS: http://localhost,http://frontend
     depends_on:
-      - backend
-    ports:
-      - "80:80"
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:
