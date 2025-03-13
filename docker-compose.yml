@@ -4,9 +4,9 @@ services:
     image: postgres:15-alpine
     container_name: projectflow-postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: projectflow
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-projectflow}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -21,20 +21,30 @@ services:
   backend:
     build:
       context: .
-      dockerfile: ./projectflow/Dockerfile
+      dockerfile: Dockerfile
     container_name: projectflow-backend
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: projectflow
-      SERVER_PORT: 8080
-      JWT_SECRET: your-secret-key
-      ENV: development
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_NAME: ${DB_NAME:-projectflow}
+      SERVER_PORT: ${SERVER_PORT:-8080}
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key}
+      ENV: ${ENV:-development}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost,http://frontend}
+      # Test credentials for seed data
+      ADMIN_EMAIL: ${VITE_ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${VITE_ADMIN_PASSWORD:-demo-password}
+      MANAGER_EMAIL: ${VITE_MANAGER_EMAIL:-manager@example.com}
+      MANAGER_PASSWORD: ${VITE_MANAGER_PASSWORD:-demo-password}
+      DEVELOPER_EMAIL: ${VITE_DEVELOPER_EMAIL:-developer@example.com}
+      DEVELOPER_PASSWORD: ${VITE_DEVELOPER_PASSWORD:-demo-password}
+      VIEWER_EMAIL: ${VITE_VIEWER_EMAIL:-viewer@example.com}
+      VIEWER_PASSWORD: ${VITE_VIEWER_PASSWORD:-demo-password}
     ports:
       - "8080:8080"
     restart: unless-stopped
@@ -43,10 +53,24 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: ./frontend/Dockerfile
+      dockerfile: .docker/frontend.Dockerfile
+      args:
+        - NGINX_CONF=${NGINX_CONF:-.docker/nginx.conf}
     container_name: projectflow-frontend
     depends_on:
       - backend
+    environment:
+      # Frontend environment variables
+      VITE_API_URL: ${VITE_API_URL:-http://backend:8080/api}
+      # Test credentials
+      VITE_ADMIN_EMAIL: ${VITE_ADMIN_EMAIL:-admin@example.com}
+      VITE_ADMIN_PASSWORD: ${VITE_ADMIN_PASSWORD:-demo-password}
+      VITE_MANAGER_EMAIL: ${VITE_MANAGER_EMAIL:-manager@example.com}
+      VITE_MANAGER_PASSWORD: ${VITE_MANAGER_PASSWORD:-demo-password}
+      VITE_DEVELOPER_EMAIL: ${VITE_DEVELOPER_EMAIL:-developer@example.com}
+      VITE_DEVELOPER_PASSWORD: ${VITE_DEVELOPER_PASSWORD:-demo-password}
+      VITE_VIEWER_EMAIL: ${VITE_VIEWER_EMAIL:-viewer@example.com}
+      VITE_VIEWER_PASSWORD: ${VITE_VIEWER_PASSWORD:-demo-password}
     ports:
       - "80:80"
     restart: unless-stopped

@@ -15,8 +15,8 @@ RUN go mod download
 # Copy the source code
 COPY . .
 
-# Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -o projectflow
+# Build the application with a specific output name
+RUN CGO_ENABLED=0 GOOS=linux go build -o projectflow-server main.go
 
 # Final stage
 FROM alpine:latest
@@ -27,7 +27,7 @@ WORKDIR /app
 RUN apk --no-cache add ca-certificates tzdata
 
 # Copy the binary from the build stage
-COPY --from=build /app/projectflow /app/projectflow
+COPY --from=build /app/projectflow-server /app/projectflow-server
 
 # Copy migrations - ensure all migrations including resource management are included
 COPY --from=build /app/database/migrations /app/database/migrations
@@ -47,4 +47,4 @@ ENV DB_HOST=postgres \
     ALLOWED_ORIGINS=http://localhost,http://frontend
 
 # Run the application
-CMD ["/app/projectflow"]
+CMD ["/app/projectflow-server"]
