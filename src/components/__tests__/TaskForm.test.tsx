@@ -96,7 +96,7 @@ describe('TaskForm Component', () => {
     fireEvent.change(screen.getByLabelText(/due date/i), { target: { value: '2025-04-01' } });
     
     // Submit the form
-    fireEvent.click(screen.getByText(/create task/i));
+    fireEvent.click(screen.getByRole('button', { name: /create task/i }));
 
     // Check if API was called with correct data
     await waitFor(() => {
@@ -119,7 +119,7 @@ describe('TaskForm Component', () => {
     fireEvent.change(screen.getByLabelText(/task title/i), { target: { value: '' } });
     
     // Submit the form
-    fireEvent.click(screen.getByText(/create task/i));
+    fireEvent.click(screen.getByRole('button', { name: /create task/i }));
 
     // Check if validation error is displayed
     await waitFor(() => {
@@ -146,7 +146,7 @@ describe('TaskForm Component', () => {
     fireEvent.change(screen.getByLabelText(/task title/i), { target: { value: 'New Task' } });
     
     // Submit the form
-    fireEvent.click(screen.getByText(/create task/i));
+    fireEvent.click(screen.getByRole('button', { name: /create task/i }));
 
     // Check if error message is displayed
     await waitFor(() => {
