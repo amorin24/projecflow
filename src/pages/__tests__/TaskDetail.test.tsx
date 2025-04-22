@@ -105,8 +105,8 @@ describe('TaskDetail Component', () => {
       expect(screen.getByText('Test Task')).toBeInTheDocument();
     });
 
-    // Change the status
-    fireEvent.change(screen.getByLabelText(/status/i), { target: { value: '2' } });
+    // Change the status - using getByText instead of getByLabelText since the status might not have a proper label
+    fireEvent.change(screen.getByRole('combobox', { name: /status/i }) || screen.getByTestId('status-select'), { target: { value: '2' } });
 
     // Check if API was called with correct data
     await waitFor(() => {
@@ -163,7 +163,14 @@ describe('TaskDetail Component', () => {
       config: {}
     } as any);
     const navigateMock = vi.fn();
-    vi.mocked(require('react-router-dom').useNavigate).mockReturnValue(navigateMock);
+    const useNavigateMock = vi.fn().mockImplementation(() => navigateMock);
+    vi.doMock('react-router-dom', async () => {
+      const actual = await vi.importActual('react-router-dom');
+      return {
+        ...actual,
+        useNavigate: useNavigateMock,
+      };
+    });
 
     render(
       <BrowserRouter>
