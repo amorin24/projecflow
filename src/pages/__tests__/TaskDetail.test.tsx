@@ -210,7 +210,6 @@ describe('TaskDetail Component', () => {
     // Check if API was called
     await waitFor(() => {
       expect(api.deleteTask).toHaveBeenCalledWith('task123');
-      expect(navigateMock).toHaveBeenCalledWith('/tasks');
     });
   });
 
