@@ -11,16 +11,16 @@ vi.mock('../../lib/api', () => ({
   getTask: vi.fn(),
 }));
 
-// Mock the useNavigate hook
+// Mock the react-router-dom hooks
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
-    useNavigate: () => vi.fn(),
-    useParams: () => ({ id: undefined }),
-    useLocation: () => ({ 
+    useNavigate: vi.fn().mockImplementation(() => vi.fn()),
+    useParams: vi.fn().mockImplementation(() => ({ id: undefined })),
+    useLocation: vi.fn().mockImplementation(() => ({ 
       search: '?title=Test+Task&description=Test+Description&due_date=2025-03-15' 
-    }),
+    })),
   };
 });
 
@@ -54,8 +54,16 @@ describe('TaskForm Component', () => {
 
   test('handles invalid date in URL parameters', async () => {
     // Override the useLocation mock for this test
-    vi.mocked(require('react-router-dom').useLocation).mockReturnValue({
+    const useLocationMock = vi.fn().mockImplementation(() => ({
       search: '?title=Test+Task&description=Test+Description&due_date=invalid-date'
+    }));
+    
+    vi.doMock('react-router-dom', async () => {
+      const actual = await vi.importActual('react-router-dom');
+      return {
+        ...actual,
+        useLocation: useLocationMock,
+      };
     });
 
     render(
