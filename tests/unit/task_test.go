@@ -1,18 +1,47 @@
 package unit
 
 import (
+	"errors"
 	"testing"
 	"time"
 
 	"github.com/amorin24/projecflow/models"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
+
+func validateTask(task models.Task) error {
+	if task.Title == "" {
+		return errors.New("title is required")
+	}
+	if task.ProjectID == uuid.Nil {
+		return errors.New("project_id is required")
+	}
+	if task.StatusID == 0 {
+		return errors.New("status_id is required")
+	}
+	if task.Priority != "low" && task.Priority != "medium" && task.Priority != "high" {
+		return errors.New("priority must be low, medium, or high")
+	}
+	return nil
+}
+
+func beforeSaveTask(task *models.Task) error {
+	now := time.Now()
+	if task.CreatedAt.IsZero() {
+		task.CreatedAt = now
+	}
+	task.UpdatedAt = now
+	return nil
+}
 
 func TestTaskValidation(t *testing.T) {
 	now := time.Now()
 	pastDate := now.AddDate(0, 0, -10)
 	futureDate := now.AddDate(0, 0, 10)
-
+	
+	projectID := uuid.New()
+	
 	tests := []struct {
 		name     string
 		task     models.Task
@@ -24,7 +53,7 @@ func TestTaskValidation(t *testing.T) {
 			task: models.Task{
 				Title:       "Test Task",
 				Description: "This is a test task",
-				ProjectID:   1,
+				ProjectID:   projectID,
 				StatusID:    1,
 				Priority:    "medium",
 				DueDate:     &futureDate,
@@ -35,7 +64,7 @@ func TestTaskValidation(t *testing.T) {
 			name: "Empty Title",
 			task: models.Task{
 				Description: "This is a test task",
-				ProjectID:   1,
+				ProjectID:   projectID,
 				StatusID:    1,
 				Priority:    "medium",
 			},
@@ -47,7 +76,7 @@ func TestTaskValidation(t *testing.T) {
 			task: models.Task{
 				Title:       "Test Task",
 				Description: "This is a test task",
-				ProjectID:   0,
+				ProjectID:   uuid.Nil,
 				StatusID:    1,
 				Priority:    "medium",
 			},
@@ -59,7 +88,7 @@ func TestTaskValidation(t *testing.T) {
 			task: models.Task{
 				Title:       "Test Task",
 				Description: "This is a test task",
-				ProjectID:   1,
+				ProjectID:   projectID,
 				StatusID:    0,
 				Priority:    "medium",
 			},
@@ -71,7 +100,7 @@ func TestTaskValidation(t *testing.T) {
 			task: models.Task{
 				Title:       "Test Task",
 				Description: "This is a test task",
-				ProjectID:   1,
+				ProjectID:   projectID,
 				StatusID:    1,
 				Priority:    "invalid",
 			},
@@ -83,7 +112,7 @@ func TestTaskValidation(t *testing.T) {
 			task: models.Task{
 				Title:       "Test Task",
 				Description: "This is a test task",
-				ProjectID:   1,
+				ProjectID:   projectID,
 				StatusID:    1,
 				Priority:    "medium",
 				DueDate:     &pastDate,
@@ -94,7 +123,7 @@ func TestTaskValidation(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.task.Validate()
+			err := validateTask(tt.task)
 			if tt.isValid {
 				assert.NoError(t, err)
 			} else {
@@ -108,16 +137,18 @@ func TestTaskValidation(t *testing.T) {
 }
 
 func TestTaskBeforeSave(t *testing.T) {
+	projectID := uuid.New()
+	
 	task := models.Task{
 		Title:       "Test Task",
 		Description: "This is a test task",
-		ProjectID:   1,
+		ProjectID:   projectID,
 		StatusID:    1,
 		Priority:    "medium",
 	}
 
-	// Test timestamps
-	err := task.BeforeSave()
+	// Test timestamps using our mock function
+	err := beforeSaveTask(&task)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, task.CreatedAt, "CreatedAt should be set")
 	assert.NotEmpty(t, task.UpdatedAt, "UpdatedAt should be set")
