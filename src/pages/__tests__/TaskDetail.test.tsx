@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { vi, describe, test, expect, beforeEach } from 'vitest';
@@ -56,7 +55,13 @@ describe('TaskDetail Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Mock successful API response
-    vi.mocked(api.getTask).mockResolvedValue({ data: { task: mockTask } });
+    vi.mocked(api.getTask).mockResolvedValue({ 
+      data: { task: mockTask },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {}
+    } as any);
   });
 
   test('renders task details correctly', async () => {
@@ -81,7 +86,13 @@ describe('TaskDetail Component', () => {
 
   test('handles status update', async () => {
     // Mock successful status update
-    vi.mocked(api.updateTaskStatus).mockResolvedValue({ data: { task: { ...mockTask, status_id: 2, status: { id: 2, name: 'In Progress' } } } });
+    vi.mocked(api.updateTaskStatus).mockResolvedValue({ 
+      data: { task: { ...mockTask, status_id: 2, status: { id: 2, name: 'In Progress' } } },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {}
+    } as any);
 
     render(
       <BrowserRouter>
@@ -114,8 +125,12 @@ describe('TaskDetail Component', () => {
           user: { name: 'Test User' },
           created_at: '2025-03-10T00:00:00Z'
         }
-      }
-    });
+      },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {}
+    } as any);
 
     render(
       <BrowserRouter>
@@ -140,7 +155,13 @@ describe('TaskDetail Component', () => {
 
   test('handles task deletion', async () => {
     // Mock successful deletion
-    vi.mocked(api.deleteTask).mockResolvedValue({});
+    vi.mocked(api.deleteTask).mockResolvedValue({
+      data: {},
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {}
+    } as any);
     const navigateMock = vi.fn();
     vi.mocked(require('react-router-dom').useNavigate).mockReturnValue(navigateMock);
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { vi } from 'vitest';
@@ -41,7 +40,7 @@ describe('TaskForm Component', () => {
   test('renders the form with URL parameters', async () => {
     render(
       <BrowserRouter>
-        <TaskForm />
+        <TaskForm projectId="project123" />
       </BrowserRouter>
     );
 
@@ -61,7 +60,7 @@ describe('TaskForm Component', () => {
 
     render(
       <BrowserRouter>
-        <TaskForm />
+        <TaskForm projectId="project123" />
       </BrowserRouter>
     );
 
@@ -77,11 +76,17 @@ describe('TaskForm Component', () => {
 
   test('submits the form with valid data', async () => {
     // Mock successful API response
-    vi.mocked(api.createTask).mockResolvedValue({ data: { task: { id: 'task123' } } });
+    vi.mocked(api.createTask).mockResolvedValue({ 
+      data: { task: { id: 'task123' } },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {} 
+    } as any);
 
     render(
       <BrowserRouter>
-        <TaskForm />
+        <TaskForm projectId="project123" />
       </BrowserRouter>
     );
 
@@ -106,7 +111,7 @@ describe('TaskForm Component', () => {
   test('handles form validation errors', async () => {
     render(
       <BrowserRouter>
-        <TaskForm />
+        <TaskForm projectId="project123" />
       </BrowserRouter>
     );
 
@@ -133,7 +138,7 @@ describe('TaskForm Component', () => {
 
     render(
       <BrowserRouter>
-        <TaskForm />
+        <TaskForm projectId="project123" />
       </BrowserRouter>
     );
 

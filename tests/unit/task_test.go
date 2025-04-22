@@ -4,9 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/amorin24/projecflow/models"
 	"github.com/stretchr/testify/assert"
-
-	"projectflow/models"
 )
 
 func TestTaskValidation(t *testing.T) {
