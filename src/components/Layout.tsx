@@ -12,6 +12,7 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from './ui/dropdown-menu';
+import ThemeToggle from './ThemeToggle';
 
 function Layout() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -110,10 +111,13 @@ function Layout() {
               </nav>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:items-center">
+              {/* Theme toggle */}
+              <ThemeToggle />
+              
               {/* Notifications dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative">
+                  <Button variant="ghost" size="icon" className="relative ml-2">
                     <Bell className="h-5 w-5" />
                     {unreadCount > 0 && (
                       <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white" />
@@ -186,12 +190,14 @@ function Layout() {
               </DropdownMenu>
             </div>
 
-            {/* Mobile menu button */}
+            {/* Mobile menu button and theme toggle */}
             <div className="flex items-center sm:hidden">
+              <ThemeToggle />
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="ml-2"
               >
                 {isMobileMenuOpen ? (
                   <X className="h-6 w-6" />
