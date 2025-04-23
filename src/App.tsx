@@ -16,6 +16,7 @@ import Profile from './pages/Profile';
 import ResourceManagement from './pages/ResourceManagement';
 import TimeOffRequests from './pages/TimeOffRequests';
 import UserAvailability from './pages/UserAvailability';
+import Demo from './pages/Demo';
 
 // Protected route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -36,6 +37,9 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Demo Route - No Authentication Required */}
+        <Route path="/demo" element={<Demo />} />
+        
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
