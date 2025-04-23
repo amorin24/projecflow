@@ -84,13 +84,13 @@ describe('TaskForm Component', () => {
 
   test('submits the form with valid data', async () => {
     // Mock successful API response
-    vi.mocked(api.createTask).mockResolvedValue({ 
+    vi.mocked(api.createTask).mockResolvedValue({
       data: { task: { id: 'task123' } },
       status: 200,
       statusText: 'OK',
       headers: {},
-      config: {} 
-    } as any);
+      config: { url: '/tasks' }
+    });
 
     render(
       <BrowserRouter>

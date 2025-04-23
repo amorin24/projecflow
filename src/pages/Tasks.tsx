@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getProjects, getTasks } from '../lib/api';
 import { Project, Task } from '../lib/types';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
