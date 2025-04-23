@@ -57,7 +57,7 @@ describe('TaskDetail Component', () => {
     // Mock successful API response
     vi.mocked(api.getTask).mockResolvedValue({
       data: { task: mockTask, statuses: [] }
-    } as any);
+    });
   });
 
   test('renders task details correctly', async () => {
@@ -82,9 +82,19 @@ describe('TaskDetail Component', () => {
 
   test('handles status update', async () => {
     // Mock successful status update
+    const updatedTask = { 
+      ...mockTask, 
+      status_id: 2, 
+      status: { id: 2, name: 'In Progress' } 
+    };
+    
     vi.mocked(api.updateTaskStatus).mockResolvedValue({
-      data: { task: { ...mockTask, status_id: 2, status: { id: 2, name: 'In Progress' } } }
-    } as any);
+      data: { task: updatedTask },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {} as any
+    });
 
     render(
       <BrowserRouter>
@@ -97,12 +107,13 @@ describe('TaskDetail Component', () => {
       expect(screen.getByText('Test Task')).toBeInTheDocument();
     });
 
-    // Instead, directly call the API function to simulate status update
-    vi.mocked(api.updateTaskStatus).mockImplementation(async () => {
-      return {
-        data: { task: { ...mockTask, status_id: 2, status: { id: 2, name: 'In Progress' } } }
-      } as any;
-    });
+    vi.mocked(api.updateTaskStatus).mockResolvedValue({
+      data: { task: updatedTask },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {}
+    } as any);
     
     // Simulate successful status update
     await api.updateTaskStatus('task123', 2);
@@ -124,7 +135,11 @@ describe('TaskDetail Component', () => {
           user: { name: 'Test User' },
           created_at: '2025-03-10T00:00:00Z'
         }
-      }
+      },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {}
     } as any);
 
     render(
@@ -151,7 +166,11 @@ describe('TaskDetail Component', () => {
   test('handles task deletion', async () => {
     // Mock successful deletion
     vi.mocked(api.deleteTask).mockResolvedValue({
-      data: {}
+      data: {},
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {}
     } as any);
     const navigateMock = vi.fn();
     const useNavigateMock = vi.fn().mockImplementation(() => navigateMock);
@@ -176,7 +195,11 @@ describe('TaskDetail Component', () => {
 
     vi.mocked(api.deleteTask).mockImplementation(async () => {
       return {
-        data: {}
+        data: {},
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config: {}
       } as any;
     });
     
