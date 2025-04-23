@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getProjects } from '../lib/api';
 import { User, Project } from '../lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
@@ -7,7 +7,7 @@ import { Button } from '../components/ui/button';
 import { Link } from 'react-router-dom';
 import ResourceAllocationList from '../components/ResourceAllocationList';
 import ResourceCalendar from '../components/ResourceCalendar';
-import { useToast } from '../components/ui/use-toast';
+import { useToast } from '../hooks/use-toast';
 
 // Mock getUsers function until API is implemented
 const getUsers = async () => {
@@ -34,8 +34,8 @@ export default function ResourceManagement() {
           getProjects()
         ]);
         
-        setUsers(usersRes || []);
-        setProjects(projectsRes?.projects || []);
+        setUsers(usersRes as User[] || []);
+        setProjects(projectsRes?.data?.projects || []);
         
         if (usersRes && usersRes.length > 0) {
           setSelectedUserId(usersRes[0].id);

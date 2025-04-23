@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import Layout from './components/Layout';
@@ -14,8 +14,8 @@ import Tasks from './pages/Tasks';
 import TaskDetail from './pages/TaskDetail';
 import Profile from './pages/Profile';
 import ResourceManagement from './pages/ResourceManagement';
-import TimeOffRequests from './pages/TimeOffRequests';
-import UserAvailability from './pages/UserAvailability';
+import { TimeOffRequests } from './pages/TimeOffRequests';
+import { UserAvailability } from './pages/UserAvailability';
 import Demo from './pages/Demo';
 
 // Protected route component
