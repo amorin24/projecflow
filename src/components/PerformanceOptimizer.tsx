@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 
-interface CacheItem {
-  data: any;
+interface CacheItem<T = unknown> {
+  data: T;
   timestamp: number;
   expiry: number;
 }
 
-const apiCache = new Map<string, CacheItem>();
+const apiCache = new Map<string, CacheItem<unknown>>();
 
 const CACHE_DURATION = 5 * 60 * 1000;
 
-export const useCachedFetch = (url: string, options?: RequestInit) => {
-  const [data, setData] = useState<any>(null);
+export const useCachedFetch = <T = unknown>(url: string, options?: RequestInit) => {
+  const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -21,7 +21,7 @@ export const useCachedFetch = (url: string, options?: RequestInit) => {
       const now = Date.now();
       
       if (cachedItem && now < cachedItem.expiry) {
-        setData(cachedItem.data);
+        setData(cachedItem.data as T);
         setLoading(false);
         return;
       }
@@ -129,57 +129,71 @@ export const OptimizedImage = ({
   );
 };
 
-export const debounce = <F extends (...args: any[]) => any>(
-  func: F,
+interface DebouncedFunction<T extends (...args: unknown[]) => unknown> {
+  (...args: Parameters<T>): Promise<ReturnType<T>>;
+}
+
+export function debounce<T extends (...args: unknown[]) => ReturnType<T>>(
+  func: T,
   waitFor: number
-) => {
+): DebouncedFunction<T> {
   let timeout: ReturnType<typeof setTimeout> | null = null;
 
-  return (...args: Parameters<F>): Promise<ReturnType<F>> => {
+  return (...args: Parameters<T>): Promise<ReturnType<T>> => {
     if (timeout !== null) {
       clearTimeout(timeout);
     }
     
-    return new Promise(resolve => {
-      timeout = setTimeout(() => resolve(func(...args)), waitFor);
+    return new Promise<ReturnType<T>>((resolve) => {
+      timeout = setTimeout(() => {
+        const result = func(...args) as ReturnType<T>;
+        resolve(result);
+      }, waitFor);
     });
   };
-};
+}
 
-export const throttle = <F extends (...args: any[]) => any>(
-  func: F,
+interface ThrottledFunction<T extends (...args: unknown[]) => unknown> {
+  (...args: Parameters<T>): ReturnType<T> | undefined;
+}
+
+export function throttle<T extends (...args: unknown[]) => unknown>(
+  func: T,
   waitFor: number
-) => {
+): ThrottledFunction<T> {
   let lastTime = 0;
   
-  return (...args: Parameters<F>): ReturnType<F> | void => {
+  return (...args: Parameters<T>): ReturnType<T> | undefined => {
     const now = Date.now();
     
     if (now - lastTime >= waitFor) {
       lastTime = now;
-      return func(...args);
+      return func(...args) as ReturnType<T>;
     }
+    return undefined;
   };
-};
+}
 
-export const memoize = <F extends (...args: any[]) => any>(
-  func: F
-): F => {
-  const cache = new Map<string, ReturnType<F>>();
+export function memoize<T extends (...args: unknown[]) => unknown>(
+  func: T
+): T {
+  const cache = new Map<string, ReturnType<T>>();
   
-  return ((...args: Parameters<F>): ReturnType<F> => {
+  const memoized = (...args: Parameters<T>): ReturnType<T> => {
     const key = JSON.stringify(args);
     
     if (cache.has(key)) {
-      return cache.get(key) as ReturnType<F>;
+      return cache.get(key) as ReturnType<T>;
     }
     
-    const result = func(...args);
+    const result = func(...args) as ReturnType<T>;
     cache.set(key, result);
     
     return result;
-  }) as F;
-};
+  };
+  
+  return memoized as T;
+}
 
 export const PerformanceMonitor = () => {
   const [metrics, setMetrics] = useState({
@@ -221,7 +235,11 @@ export const PerformanceMonitor = () => {
       const firstInput = entries[0];
       
       if (firstInput) {
-        const entry = firstInput as any;
+        interface FirstInputEntry extends PerformanceEntry {
+          processingStart: number;
+          startTime: number;
+        }
+        const entry = firstInput as FirstInputEntry;
         setMetrics(prev => ({ ...prev, fid: entry.processingStart - entry.startTime }));
       }
     });
@@ -231,9 +249,15 @@ export const PerformanceMonitor = () => {
     const clsObserver = new PerformanceObserver((entryList) => {
       let clsValue = 0;
       
+      interface LayoutShiftEntry extends PerformanceEntry {
+        hadRecentInput: boolean;
+        value: number;
+      }
+      
       for (const entry of entryList.getEntries()) {
-        if (!(entry as any).hadRecentInput) {
-          clsValue += (entry as any).value;
+        const layoutShift = entry as LayoutShiftEntry;
+        if (!layoutShift.hadRecentInput) {
+          clsValue += layoutShift.value;
         }
       }
       

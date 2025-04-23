@@ -6,14 +6,28 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   {
     rules: {
-      'no-unused-vars': 'off', // TypeScript handles this with ts(6133)
-      '@typescript-eslint/no-unused-vars': 'warn', // Downgrade to warning
+      'no-unused-vars': 'off',
+      'no-undef': 'off',
+      
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-require-imports': 'error',
+      
       'react/react-in-jsx-scope': 'off', // Not needed in React 17+
-      '@typescript-eslint/no-explicit-any': 'warn', // Downgrade to warning for CI
-      'no-undef': 'off', // Disable no-undef since we're using TypeScript
-      '@typescript-eslint/no-require-imports': 'warn', // Downgrade to warning for CI
     },
-    ignores: ['dist/**', 'node_modules/**'],
+    ignores: [
+      'dist/**', 
+      'node_modules/**',
+      'build/**',
+      'coverage/**',
+      '.github/**',
+      'vite.config.js',
+      'vite.config.ts',
+      'vitest.config.js',
+      'vitest.config.ts',
+      'postcss.config.js',
+      'tailwind.config.js'
+    ],
     languageOptions: {
       globals: {
         // Browser globals
@@ -69,6 +83,8 @@ export default tseslint.config(
         test: 'readonly',
         cy: 'readonly',
         Cypress: 'readonly',
+        vi: 'readonly',
+        vitest: 'readonly',
       }
     }
   }

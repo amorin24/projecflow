@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { 
-  Task, Project, TaskStatus, Notification, CommentResponse,
+  Task, Project, TaskStatus, Notification,
   ResourceAllocation, ResourceAllocationResponse, UserAvailability,
   TimeOffRequest, CreateResourceAllocationRequest, CreateUserAvailabilityRequest,
   CreateTimeOffRequestRequest
@@ -9,7 +9,7 @@ import {
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 // Simple request cache
-const cache: Record<string, { data: any; timestamp: number }> = {};
+const cache: Record<string, { data: unknown; timestamp: number }> = {};
 const CACHE_DURATION = 60000; // 1 minute in milliseconds
 
 const api = axios.create({
@@ -57,11 +57,27 @@ export const cachedGet = async <T>(url: string): Promise<{ data: T }> => {
 export const login = (email: string, password: string) => 
   api.post('/auth/login', { email, password });
 
-export const register = (userData: any) => 
+interface UserRegistrationData {
+  email: string;
+  password: string;
+  name: string;
+  role?: string;
+}
+
+export const register = (userData: UserRegistrationData) => 
   api.post('/auth/register', userData);
 
 export const getCurrentUser = () => 
   api.get('/auth/me');
+
+interface ProjectData {
+  name: string;
+  description?: string;
+  start_date?: string;
+  end_date?: string;
+  status?: string;
+  team_id?: string;
+}
 
 // Projects API
 export const getProjects = (): Promise<{ data: { projects: Project[] } }> => 
@@ -70,20 +86,36 @@ export const getProjects = (): Promise<{ data: { projects: Project[] } }> =>
 export const getProject = (id: string): Promise<{ data: { project: Project } }> => 
   cachedGet(`/projects/${id}`);
 
-export const createProject = (projectData: any) => 
+export const createProject = (projectData: ProjectData) => 
   api.post('/projects', projectData);
 
-export const updateProject = (id: string, projectData: any) => 
+export const updateProject = (id: string, projectData: Partial<ProjectData>) => 
   api.put(`/projects/${id}`, projectData);
 
 export const deleteProject = (id: string) => 
   api.delete(`/projects/${id}`);
 
-export const addProjectMember = (projectId: string, userData: any) => 
+interface ProjectMemberData {
+  user_id: string;
+  role?: string;
+}
+
+export const addProjectMember = (projectId: string, userData: ProjectMemberData) => 
   api.post(`/projects/${projectId}/members`, userData);
 
 export const removeProjectMember = (projectId: string, userId: string) => 
   api.delete(`/projects/${projectId}/members/${userId}`);
+
+interface TaskData {
+  title: string;
+  description?: string;
+  project_id: string;
+  assignee_id?: string;
+  status_id?: number;
+  priority?: number;
+  due_date?: string;
+  estimated_hours?: number;
+}
 
 // Tasks API
 export const getTasks = (projectId: string): Promise<{ data: { tasks: Task[] } }> => 
@@ -92,10 +124,10 @@ export const getTasks = (projectId: string): Promise<{ data: { tasks: Task[] } }
 export const getTask = (id: string): Promise<{ data: { task: Task; statuses: TaskStatus[] } }> => 
   cachedGet(`/tasks/${id}`);
 
-export const createTask = (taskData: any) => 
+export const createTask = (taskData: TaskData) => 
   api.post('/tasks', taskData);
 
-export const updateTask = (id: string, taskData: any) => 
+export const updateTask = (id: string, taskData: Partial<TaskData>) => 
   api.put(`/tasks/${id}`, taskData);
 
 export const updateTaskStatus = (id: string, statusId: number) => 
