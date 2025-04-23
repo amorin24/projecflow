@@ -4,6 +4,7 @@ export type ToastProps = {
   title: string;
   description?: string;
   type?: 'default' | 'success' | 'error' | 'warning';
+  variant?: 'default' | 'destructive';
   duration?: number;
 };
 
