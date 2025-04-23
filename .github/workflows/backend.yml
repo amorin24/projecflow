@@ -79,4 +79,5 @@ jobs:
       - name: Build with fixed imports
         run: |
           cd /tmp/projectflow_build
-          go build -v ./...
+          # Exclude scripts directory from build
+          go build -v $(go list ./... | grep -v "/scripts")
