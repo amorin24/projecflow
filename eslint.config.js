@@ -26,7 +26,10 @@ export default tseslint.config(
       'vitest.config.js',
       'vitest.config.ts',
       'postcss.config.js',
-      'tailwind.config.js'
+      'tailwind.config.js',
+      'tailwind.config.js',
+      'tests/e2e/**',
+      '*.js'
     ],
     languageOptions: {
       globals: {
