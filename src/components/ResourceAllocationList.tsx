@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getResourceAllocations, deleteResourceAllocation } from '../lib/api';
 import { ResourceAllocation, User, Project } from '../lib/types';
 import { Button } from './ui/button';

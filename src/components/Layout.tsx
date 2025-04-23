@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { getNotifications, markAllNotificationsRead } from '../lib/api';
@@ -291,4 +291,4 @@ function Layout() {
   );
 }
 
-export default React.memo(Layout);
+export default Layout;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getStatusColor, getStatusIcon, getPriorityColor } from '../utils/statusUtils';
 import { getTask, updateTaskStatus, addTaskComment } from '../lib/api';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getTimeOffRequests, updateTimeOffRequestStatus } from '../lib/api';
 import { TimeOffRequest, User } from '../lib/types';
 import { Button } from './ui/button';

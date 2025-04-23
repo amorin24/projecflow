@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getUserAvailability, deleteUserAvailability } from '../lib/api';
 import { UserAvailability, User } from '../lib/types';
 import { Button } from './ui/button';
