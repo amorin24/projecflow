@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { createTask } from '../lib/api';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from './ui/button';
@@ -60,8 +60,8 @@ function TaskFormDialog({ projectId, onSuccess, onClose }: TaskFormDialogProps) 
         description: formData.description,
         project_id: formData.project_id,
         assignee_id: formData.assignee_id || user?.id,
-        due_date: formData.due_date || null,
-        priority: formData.priority,
+        due_date: formData.due_date || undefined,
+        priority: Number(formData.priority === 'low' ? 1 : formData.priority === 'medium' ? 2 : 3),
         status_id: Number(formData.status_id)
       };
       
@@ -77,11 +77,12 @@ function TaskFormDialog({ projectId, onSuccess, onClose }: TaskFormDialogProps) 
       if (onClose) {
         onClose();
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error saving task', err);
       // Provide more detailed error message if available
-      const errorMessage = err.response?.data?.message || 
-                          err.response?.data?.error || 
+      const errorObj = err as { response?: { data?: { message?: string; error?: string } } };
+      const errorMessage = errorObj.response?.data?.message || 
+                          errorObj.response?.data?.error || 
                           'Failed to save task. Please check all fields and try again.';
       setError(errorMessage);
       setIsLoading(false);

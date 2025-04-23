@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createTimeOffRequest } from '../lib/api';
 import { CreateTimeOffRequestRequest, User } from '../lib/types';
