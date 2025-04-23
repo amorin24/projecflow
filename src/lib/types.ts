@@ -170,3 +170,98 @@ export interface NotificationResponse {
 export interface MarkNotificationReadRequest {
   read: boolean;
 }
+
+
+// Resource management types
+export interface ResourceAllocation {
+  id: number;
+  user_id: string;
+  project_id: string;
+  allocation_percentage: number;
+  start_date: string;
+  end_date?: string;
+  created_at: string;
+  updated_at: string;
+  user?: User;
+  project?: Project;
+}
+
+export interface ResourceAllocationResponse {
+  id: number;
+  user: User;
+  project: Project;
+  allocation_percentage: number;
+  start_date: string;
+  end_date?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserAvailability {
+  id: number;
+  user_id: string;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+  created_at: string;
+  updated_at: string;
+  user?: User;
+}
+
+export interface UserAvailabilityResponse {
+  id: number;
+  user: User;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TimeOffRequest {
+  id: number;
+  user_id: string;
+  start_date: string;
+  end_date: string;
+  status: string;
+  request_type: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+  user?: User;
+}
+
+export interface TimeOffRequestResponse {
+  id: number;
+  user: User;
+  start_date: string;
+  end_date: string;
+  status: string;
+  request_type: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateResourceAllocationRequest {
+  user_id: string;
+  project_id: string;
+  allocation_percentage: number;
+  start_date: string;
+  end_date?: string;
+}
+
+export interface CreateUserAvailabilityRequest {
+  user_id: string;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+}
+
+export interface CreateTimeOffRequestRequest {
+  user_id: string;
+  start_date: string;
+  end_date: string;
+  request_type: string;
+  notes?: string;
+}

@@ -12,6 +12,7 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from './ui/dropdown-menu';
+import ThemeToggle from './ThemeToggle';
 
 function Layout() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -71,43 +72,52 @@ function Layout() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white shadow">
+      <header className="bg-card shadow-sm border-b border-border sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
               <div className="flex-shrink-0 flex items-center">
-                <Link to="/" className="text-xl font-bold text-indigo-600">
+                <Link to="/" className="text-xl font-bold text-primary transition-colors hover:text-primary/90">
                   ProjectFlow
                 </Link>
               </div>
               <nav className="hidden sm:ml-6 sm:flex sm:space-x-8">
                 <Link
                   to="/"
-                  className="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  className="border-primary text-foreground inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors hover:text-primary"
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/projects"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  className="border-transparent text-muted-foreground hover:border-border hover:text-foreground inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors"
                 >
                   Projects
                 </Link>
                 <Link
                   to="/tasks"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  className="border-transparent text-muted-foreground hover:border-border hover:text-foreground inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors"
                 >
                   My Tasks
+                </Link>
+                <Link
+                  to="/resources"
+                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >
+                  Resources
                 </Link>
               </nav>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:items-center">
+              {/* Theme toggle */}
+              <ThemeToggle />
+              
               {/* Notifications dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative">
+                  <Button variant="ghost" size="icon" className="relative ml-2">
                     <Bell className="h-5 w-5" />
                     {unreadCount > 0 && (
                       <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white" />
@@ -180,12 +190,14 @@ function Layout() {
               </DropdownMenu>
             </div>
 
-            {/* Mobile menu button */}
+            {/* Mobile menu button and theme toggle */}
             <div className="flex items-center sm:hidden">
+              <ThemeToggle />
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="ml-2"
               >
                 {isMobileMenuOpen ? (
                   <X className="h-6 w-6" />
@@ -221,6 +233,13 @@ function Layout() {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 My Tasks
+              </Link>
+              <Link
+                to="/resources"
+                className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Resources
               </Link>
             </div>
             <div className="pt-4 pb-3 border-t border-gray-200">

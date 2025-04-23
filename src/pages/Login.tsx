@@ -68,11 +68,18 @@ export default function Login() {
           </form>
         </CardContent>
         <CardFooter className="flex flex-col items-center">
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 mb-2">
             Don't have an account?{' '}
             <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
               Sign up
             </Link>
+          </p>
+          <p className="text-sm text-gray-600 mb-4">
+            Or try the{' '}
+            <Link to="/demo" className="font-medium text-indigo-600 hover:text-indigo-500">
+              Demo Mode
+            </Link>
+            {' '}without creating an account
           </p>
           {/* Test credentials display */}
           <TestCredentialsDisplay className="w-full" />
