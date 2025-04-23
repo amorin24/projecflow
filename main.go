@@ -54,7 +54,7 @@ func main() {
 	}))
 
 	// Setup routes
-	routes.SetupRoutes(app)
+	routes.SetupRoutes(app, database.DB)
 
 	// Add a health check endpoint
 	app.Get("/health", func(c *fiber.Ctx) error {
