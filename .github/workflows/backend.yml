@@ -3,18 +3,8 @@ name: Backend CI
 on:
   push:
     branches: [ main, dev ]
-    paths:
-      - '**/*.go'
-      - 'go.mod'
-      - 'go.sum'
-      - '.github/workflows/backend.yml'
   pull_request:
     branches: [ main, dev ]
-    paths:
-      - '**/*.go'
-      - 'go.mod'
-      - 'go.sum'
-      - '.github/workflows/backend.yml'
 
 jobs:
   test:

@@ -3,24 +3,8 @@ name: Frontend CI
 on:
   push:
     branches: [ main, dev ]
-    paths:
-      - 'src/**'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'tsconfig.json'
-      - 'vite.config.ts'
-      - 'vitest.config.ts'
-      - '.github/workflows/frontend.yml'
   pull_request:
     branches: [ main, dev ]
-    paths:
-      - 'src/**'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'tsconfig.json'
-      - 'vite.config.ts'
-      - 'vitest.config.ts'
-      - '.github/workflows/frontend.yml'
 
 jobs:
   lint:

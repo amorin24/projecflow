@@ -3,20 +3,8 @@ name: Docker CI
 on:
   push:
     branches: [ main, dev ]
-    paths:
-      - 'docker-compose.yml'
-      - 'Dockerfile'
-      - '**/Dockerfile'
-      - '.docker/**'
-      - '.github/workflows/docker.yml'
   pull_request:
     branches: [ main, dev ]
-    paths:
-      - 'docker-compose.yml'
-      - 'Dockerfile'
-      - '**/Dockerfile'
-      - '.docker/**'
-      - '.github/workflows/docker.yml'
 
 jobs:
   build:
