@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
@@ -169,8 +169,7 @@ export const EnhancedAuthTabs = () => {
     const success = await registerUser({
       email,
       password,
-      full_name: name,
-      username: email.split('@')[0],
+      name,
     });
     
     if (!success) {
