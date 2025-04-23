@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getProject, getTasks, getTaskStatuses, updateTaskStatus, deleteTask } from '../lib/api';
+import { getProject, getTasks, getTaskStatuses, deleteTask } from '../lib/api';
 import { Project, Task, TaskStatus } from '../lib/types';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';

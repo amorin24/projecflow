@@ -49,7 +49,7 @@ export const useAuth = () => {
         isLoading: false,
         error: null,
       });
-    } catch (err) {
+    } catch (error) {
       localStorage.removeItem('token');
       setAuthState({
         user: null,

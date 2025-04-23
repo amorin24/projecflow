@@ -224,11 +224,12 @@ function TaskForm({ projectId, task, onSuccess, isDialog = false, onClose }: Tas
       if (onClose) {
         onClose();
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error saving task', err);
       // Provide more detailed error message if available
-      const errorMessage = err.response?.data?.message || 
-                          err.response?.data?.error || 
+      const errorObj = err as { response?: { data?: { message?: string; error?: string } } };
+      const errorMessage = errorObj.response?.data?.message || 
+                          errorObj.response?.data?.error || 
                           'Failed to save task. Please check all fields and try again.';
       setError(errorMessage);
       setIsLoading(false);

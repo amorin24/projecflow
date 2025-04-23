@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button';
 // Remove unused import
 import { Textarea } from '../components/ui/textarea';
-import { AlertCircle, Clock, CheckCircle, MessageSquare, Calendar, Flag } from 'lucide-react';
+import { AlertCircle, MessageSquare, Calendar, Flag } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 
