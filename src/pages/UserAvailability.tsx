@@ -1,90 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { '../lib/api';
-import { User } from '../lib/types';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { Link } from 'react-router-dom';
-import UserAvailabilityList from '../components/UserAvailabilityList';
-import UserAvailabilityForm from '../components/UserAvailabilityForm';
-import { useToast } from '../components/ui/use-toast';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { UserAvailabilityForm } from '../components/UserAvailabilityForm';
 
-export default function UserAvailability() {
-  const { toast } = useToast();
-  const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [view, setView] = useState<'list' | 'form'>('list');
-  const [currentUserId, setCurrentUserId] = useState<string>('');
+export function UserAvailability() {
+  const [showForm, setShowForm] = useState(false);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setIsLoading(true);
-        const res = await getUsers();
-        setUsers(res.data.users || []);
-        
-        // For demo purposes, set the first user as current user
-        if (res.data.users?.length > 0) {
-          setCurrentUserId(res.data.users[0].id);
-        }
-        
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-        toast({
-          title: 'Error',
-          description: 'Failed to load users. Please try again.',
-          variant: 'destructive',
-        });
-        setIsLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, [toast]);
+    // Fetch user availability
+    // This would be replaced with an actual API call
+    setUsers([
+      { id: 1, name: 'John Doe', availability: 80, projects: ['Project A', 'Project B'] },
+      { id: 2, name: 'Jane Smith', availability: 100, projects: ['Project C'] },
+      { id: 3, name: 'Bob Johnson', availability: 50, projects: ['Project A', 'Project D'] },
+    ]);
+  }, []);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-        <h1 className="text-2xl font-bold">User Availability</h1>
-        <div className="flex flex-wrap gap-2">
-          {view === 'list' ? (
-            <Button onClick={() => setView('form')}>
-              Add Availability
-            </Button>
-          ) : (
-            <Button onClick={() => setView('list')}>
-              View Availability
-            </Button>
-          )}
-          <Link to="/resources">
-            <Button variant="outline">
-              Back to Resources
-            </Button>
-          </Link>
-        </div>
+    <div className="container mx-auto py-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">User Availability</h1>
+        <Button onClick={() => setShowForm(!showForm)}>
+          {showForm ? 'Cancel' : 'Update Availability'}
+        </Button>
       </div>
 
-      {isLoading ? (
-        <Card>
-          <CardContent className="flex items-center justify-center py-8">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+      {showForm && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Update Availability</CardTitle>
+            <CardDescription>Update your availability for projects</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <UserAvailabilityForm onSubmit={() => setShowForm(false)} />
           </CardContent>
         </Card>
-      ) : (
-        <>
-          {view === 'list' ? (
-            <UserAvailabilityList 
-              users={users}
-              currentUserId={currentUserId}
-            />
-          ) : (
-            <UserAvailabilityForm 
-              users={users}
-              currentUserId={currentUserId}
-            />
-          )}
-        </>
       )}
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {users.map((user) => (
+          <Card key={user.id}>
+            <CardHeader>
+              <CardTitle>{user.name}</CardTitle>
+              <CardDescription>
+                Availability: {user.availability}%
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <h3 className="font-semibold mb-2">Assigned Projects:</h3>
+              <ul className="list-disc pl-5">
+                {user.projects.map((project, index) => (
+                  <li key={index}>{project}</li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }

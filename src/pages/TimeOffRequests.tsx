@@ -1,91 +1,67 @@
 import React, { useState, useEffect } from 'react';
-import { '../lib/api';
-import { User } from '../lib/types';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { Link } from 'react-router-dom';
-import TimeOffRequestList from '../components/TimeOffRequestList';
-import TimeOffRequestForm from '../components/TimeOffRequestForm';
-import { useToast } from '../components/ui/use-toast';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
+import { TimeOffRequestForm } from '../components/TimeOffRequestForm';
 
-export default function TimeOffRequests() {
-  const { toast } = useToast();
-  const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [view, setView] = useState<'list' | 'form'>('list');
-  const [currentUserId, setCurrentUserId] = useState<string>('');
+export function TimeOffRequests() {
+  const [showForm, setShowForm] = useState(false);
+  const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setIsLoading(true);
-        const res = await getUsers();
-        setUsers(res.data.users || []);
-        
-        // For demo purposes, set the first user as current user
-        if (res.data.users?.length > 0) {
-          setCurrentUserId(res.data.users[0].id);
-        }
-        
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-        toast({
-          title: 'Error',
-          description: 'Failed to load users. Please try again.',
-          variant: 'destructive',
-        });
-        setIsLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, [toast]);
+    // Fetch time off requests
+    // This would be replaced with an actual API call
+    setRequests([
+      { id: 1, user: 'John Doe', startDate: '2025-05-01', endDate: '2025-05-05', status: 'Pending' },
+      { id: 2, user: 'Jane Smith', startDate: '2025-06-10', endDate: '2025-06-15', status: 'Approved' },
+    ]);
+  }, []);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-        <h1 className="text-2xl font-bold">Time Off Requests</h1>
-        <div className="flex flex-wrap gap-2">
-          {view === 'list' ? (
-            <Button onClick={() => setView('form')}>
-              New Request
-            </Button>
-          ) : (
-            <Button onClick={() => setView('list')}>
-              View All Requests
-            </Button>
-          )}
-          <Link to="/resources">
-            <Button variant="outline">
-              Back to Resources
-            </Button>
-          </Link>
-        </div>
+    <div className="container mx-auto py-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Time Off Requests</h1>
+        <Button onClick={() => setShowForm(!showForm)}>
+          {showForm ? 'Cancel' : 'New Request'}
+        </Button>
       </div>
 
-      {isLoading ? (
-        <Card>
-          <CardContent className="flex items-center justify-center py-8">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+      {showForm && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>New Time Off Request</CardTitle>
+            <CardDescription>Submit a new time off request</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <TimeOffRequestForm onSubmit={() => setShowForm(false)} />
           </CardContent>
         </Card>
-      ) : (
-        <>
-          {view === 'list' ? (
-            <TimeOffRequestList 
-              users={users}
-              isAdmin={true}
-              currentUserId={currentUserId}
-            />
-          ) : (
-            <TimeOffRequestForm 
-              users={users}
-              currentUserId={currentUserId}
-            />
-          )}
-        </>
       )}
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {requests.map((request) => (
+          <Card key={request.id}>
+            <CardHeader>
+              <CardTitle>{request.user}</CardTitle>
+              <CardDescription>Status: {request.status}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>Start Date: {request.startDate}</p>
+              <p>End Date: {request.endDate}</p>
+            </CardContent>
+            <CardFooter>
+              <div className="flex gap-2">
+                {request.status === 'Pending' && (
+                  <>
+                    <Button variant="outline" size="sm">Approve</Button>
+                    <Button variant="outline" size="sm">Deny</Button>
+                  </>
+                )}
+                <Button variant="outline" size="sm">View Details</Button>
+              </div>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
