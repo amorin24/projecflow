@@ -16,11 +16,16 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       
+      - name: Fix Docker paths
+        run: |
+          # Create a temporary docker-compose file with correct paths
+          sed 's|./projectflow/Dockerfile|./Dockerfile|g; s|./frontend/Dockerfile|./Dockerfile|g' docker-compose.yml > docker-compose.fixed.yml
+          
       - name: Build Docker images
-        run: docker-compose build
+        run: docker-compose -f docker-compose.fixed.yml build
       
       - name: Start Docker containers
-        run: docker-compose up -d
+        run: docker-compose -f docker-compose.fixed.yml up -d
       
       - name: Wait for containers to be ready
         run: |

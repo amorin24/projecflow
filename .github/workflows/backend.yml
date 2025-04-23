@@ -63,5 +63,20 @@ jobs:
       - name: Install dependencies
         run: go mod download
       
-      - name: Build
-        run: go build -v ./...
+      - name: Fix import paths
+        run: |
+          # Create temporary directory for build with correct import paths
+          mkdir -p /tmp/projectflow_build
+          cp -r . /tmp/projectflow_build/
+          cd /tmp/projectflow_build
+          
+          # Replace import paths in all Go files
+          find . -name "*.go" -type f -exec sed -i 's|github.com/projectflow/|github.com/amorin24/projecflow/|g' {} \;
+          
+          # Update go.sum
+          go mod tidy
+          
+      - name: Build with fixed imports
+        run: |
+          cd /tmp/projectflow_build
+          go build -v ./...
