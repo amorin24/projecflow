@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/projectflow/models"
@@ -383,7 +385,35 @@ func UpdateTask(c *fiber.Ctx) error {
 	task.Description = req.Description
 	task.StatusID = req.StatusID
 	task.AssigneeID = req.AssigneeID
-	task.DueDate = req.DueDate
+	
+	// Parse due date if provided
+	if req.DueDate != nil && *req.DueDate != "" {
+		// Try multiple date formats
+		formats := []string{
+			"2006-01-02",      // YYYY-MM-DD
+			"01/02/2006",      // MM/DD/YYYY
+			"02/01/2006",      // DD/MM/YYYY
+			"2006/01/02",      // YYYY/MM/DD
+			"January 2, 2006", // Month Day, Year
+		}
+		
+		var parsedTime time.Time
+		var parseErr error
+		
+		for _, format := range formats {
+			parsedTime, parseErr = time.Parse(format, *req.DueDate)
+			if parseErr == nil {
+				// Validate the year is reasonable (between 1900 and 2100)
+				if parsedTime.Year() >= 1900 && parsedTime.Year() <= 2100 {
+					task.DueDate = &parsedTime
+					break
+				}
+			}
+		}
+	} else {
+		task.DueDate = nil
+	}
+	
 	task.Priority = req.Priority
 
 	// Create notification for new assignee if changed
