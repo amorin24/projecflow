@@ -73,17 +73,25 @@ export const useAuth = () => {
         error: null,
       });
       return true;
-    } catch (err: any) {
+    } catch (err) {
+      const error = err as { response?: { data?: { error?: string } } };
       setAuthState({
         ...authState,
         isLoading: false,
-        error: err.response?.data?.error || 'Login failed',
+        error: error.response?.data?.error || 'Login failed',
       });
       return false;
     }
   };
 
-  const registerUser = async (userData: any) => {
+  interface UserRegistrationData {
+    email: string;
+    password: string;
+    name: string;
+    role?: string;
+  }
+
+  const registerUser = async (userData: UserRegistrationData) => {
     setAuthState({ ...authState, isLoading: true, error: null });
     try {
       const res = await register(userData);
@@ -96,11 +104,12 @@ export const useAuth = () => {
         error: null,
       });
       return true;
-    } catch (err: any) {
+    } catch (err) {
+      const errorObj = err as { response?: { data?: { error?: string } } };
       setAuthState({
         ...authState,
         isLoading: false,
-        error: err.response?.data?.error || 'Registration failed',
+        error: errorObj.response?.data?.error || 'Registration failed',
       });
       return false;
     }
