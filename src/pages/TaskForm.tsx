@@ -9,6 +9,7 @@ import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '../components/ui/alert';
+import { Task } from '../lib/types';
 
 export default function TaskFormPage() {
   const { id } = useParams<{ id?: string }>();
@@ -149,18 +150,18 @@ export default function TaskFormPage() {
       try {
         setIsLoading(true);
         const res = await getTask(id);
-        const responseData = res.data as { task?: any };
+        const responseData = res.data as unknown as { task: Task };
         if (responseData.task) {
           const task = responseData.task;
           
           setFormData({
             title: task.title || '',
             description: task.description || '',
-            project_id: task.project?.id || projectId,
-            assignee_id: task.assignee?.id || user?.id || '',
+            project_id: task.project_id || projectId,
+            assignee_id: task.assignee_id || user?.id || '',
             due_date: task.due_date ? new Date(task.due_date).toISOString().split('T')[0] : '',
             priority: task.priority || 'medium',
-            status_id: task.status?.id || 1,
+            status_id: task.status_id || 1,
           });
         }
         
@@ -253,13 +254,19 @@ export default function TaskFormPage() {
       console.log("Submitting with date:", formattedDate);
       
       // Format the data for submission
+      const priorityMap: Record<string, number> = {
+        'low': 1,
+        'medium': 2,
+        'high': 3
+      };
+      
       const submissionData = {
         title: formData.title,
         description: formData.description,
-        project_id: formData.project_id || '1', // Default to project ID 1 if not provided
+        project_id: formData.project_id || '1', // Always include project_id
         assignee_id: formData.assignee_id || user?.id,
-        due_date: formattedDate || null, // Ensure null is sent if no date
-        priority: formData.priority || 'medium',
+        due_date: formattedDate || undefined, // Use undefined instead of null
+        priority: priorityMap[formData.priority || 'medium'],
         status_id: Number(formData.status_id) || 1
       };
       
@@ -273,11 +280,12 @@ export default function TaskFormPage() {
       
       setIsSubmitting(false);
       navigate(`/projects/${formData.project_id}`);
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error saving task', err);
       // Provide more detailed error message if available
-      const errorMessage = err.response?.data?.message || 
-                          err.response?.data?.error || 
+      const errorObj = err as { response?: { data?: { message?: string; error?: string } } };
+      const errorMessage = errorObj.response?.data?.message || 
+                          errorObj.response?.data?.error || 
                           'Failed to save task. Please check all fields and try again.';
       setError(errorMessage);
       setIsSubmitting(false);
