@@ -93,7 +93,7 @@ describe('TaskDetail Component', () => {
       status: 200,
       statusText: 'OK',
       headers: {},
-      config: {} as any
+      config: { url: `/tasks/${mockTask.id}/status` }
     });
 
     render(
@@ -112,8 +112,8 @@ describe('TaskDetail Component', () => {
       status: 200,
       statusText: 'OK',
       headers: {},
-      config: {}
-    } as any);
+      config: { url: `/tasks/${mockTask.id}/status` }
+    });
     
     // Simulate successful status update
     await api.updateTaskStatus('task123', 2);
@@ -139,8 +139,8 @@ describe('TaskDetail Component', () => {
       status: 200,
       statusText: 'OK',
       headers: {},
-      config: {}
-    } as any);
+      config: { url: `/tasks/${mockTask.id}/comments` }
+    });
 
     render(
       <BrowserRouter>
@@ -170,8 +170,8 @@ describe('TaskDetail Component', () => {
       status: 200,
       statusText: 'OK',
       headers: {},
-      config: {}
-    } as any);
+      config: { url: `/tasks/${mockTask.id}` }
+    });
     const navigateMock = vi.fn();
     const useNavigateMock = vi.fn().mockImplementation(() => navigateMock);
     vi.doMock('react-router-dom', async () => {
@@ -193,14 +193,12 @@ describe('TaskDetail Component', () => {
       expect(screen.getByText('Test Task')).toBeInTheDocument();
     });
 
-    vi.mocked(api.deleteTask).mockImplementation(async () => {
-      return {
-        data: {},
-        status: 200,
-        statusText: 'OK',
-        headers: {},
-        config: {}
-      } as any;
+    vi.mocked(api.deleteTask).mockResolvedValue({
+      data: {},
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: { url: `/tasks/${mockTask.id}` }
     });
     
     // Simulate successful deletion
@@ -215,7 +213,11 @@ describe('TaskDetail Component', () => {
   test('handles API errors', async () => {
     // Mock API error
     vi.mocked(api.getTask).mockRejectedValue({
-      response: { data: { message: 'Task not found' } }
+      response: { 
+        data: { message: 'Task not found' },
+        status: 404,
+        statusText: 'Not Found'
+      }
     });
 
     render(
