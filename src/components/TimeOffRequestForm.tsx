@@ -24,7 +24,7 @@ const requestTypes = [
   { value: 'other', label: 'Other' },
 ];
 
-export default function TimeOffRequestForm({
+export function TimeOffRequestForm({
   users,
   currentUserId,
   onSubmit,

@@ -29,7 +29,7 @@ const timeSlots = Array.from({ length: 24 }, (_, i) => {
   return { value: `${hour}:00:00`, label: `${hour}:00` };
 });
 
-export default function UserAvailabilityForm({
+export function UserAvailabilityForm({
   users,
   currentUserId,
   onSubmit,

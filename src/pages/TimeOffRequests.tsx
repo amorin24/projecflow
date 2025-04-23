@@ -5,7 +5,7 @@ import { TimeOffRequestForm } from '../components/TimeOffRequestForm';
 
 export function TimeOffRequests() {
   const [showForm, setShowForm] = useState(false);
-  const [requests, setRequests] = useState([]);
+  const [requests, setRequests] = useState<{id: number; user: string; startDate: string; endDate: string; status: string;}[]>([]);
 
   useEffect(() => {
     // Fetch time off requests

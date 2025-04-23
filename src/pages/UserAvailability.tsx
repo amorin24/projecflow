@@ -5,7 +5,7 @@ import { UserAvailabilityForm } from '../components/UserAvailabilityForm';
 
 export function UserAvailability() {
   const [showForm, setShowForm] = useState(false);
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<{id: number; name: string; availability: number; projects: string[];}[]>([]);
 
   useEffect(() => {
     // Fetch user availability

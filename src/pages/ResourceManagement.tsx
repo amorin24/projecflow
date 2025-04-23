@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { getUsers, getProjects } from '../lib/api';
+import { getProjects } from '../lib/api';
+// Mock getUsers function until API is implemented
+const getUsers = async () => {
+  return [
+    { id: "1", full_name: "John Doe", email: "john@example.com" },
+    { id: "2", full_name: "Jane Smith", email: "jane@example.com" },
+  ];
+};
 import { User, Project } from '../lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
@@ -24,6 +31,13 @@ export default function ResourceManagement() {
         const [usersRes, projectsRes] = await Promise.all([
           getUsers(),
           getProjects()
+// Mock getUsers function until API is implemented
+const getUsers = async () => {
+  return [
+    { id: "1", full_name: "John Doe", email: "john@example.com" },
+    { id: "2", full_name: "Jane Smith", email: "jane@example.com" },
+  ];
+};
         ]);
         
         setUsers(usersRes.data.users || []);
